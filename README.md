@@ -2,7 +2,31 @@
 
 FastAPI + PostgreSQL 17 + HTML/CSS/JavaScript로 구현한 데이터베이스실무 기말 프로젝트입니다. **주제 선택 → 학습 세션 → AI 대화 → 문제 풀이 → 기록·통계 조회**와 **프롬프트 A/B 실험**을 실제 DB에 저장합니다.
 
-![학습 공간](docs/screenshots/03-learning-start.png)
+**실행 화면:** [이 컴퓨터에서 LOOP AI 열기](http://127.0.0.1:8000) · **API 확인:** [서버 상태](http://127.0.0.1:8000/api/health)
+
+위 주소는 프로그램을 실행한 컴퓨터에서만 열리는 로컬 주소입니다. 현재 별도의 인터넷 공개 배포 사이트는 없습니다. GitHub는 코드를 보관하는 곳이며 저장소 화면 자체에서 FastAPI 앱이 실행되지는 않습니다. 이 프로젝트는 **Streamlit을 사용하지 않습니다.**
+
+| 무엇인가요? | 어디에 있나요? |
+|---|---|
+| 화면 코드 | `frontend/index.html`, `style.css`, `app.js`, `guide.js` |
+| Python 서버 | `backend/main.py`와 인증·AI 모듈 |
+| 데이터베이스 | Docker의 PostgreSQL 17, `database/` SQL 3종 |
+| 시작 파일 | 루트의 `START_LOOP_AI.cmd` |
+| 실제 화면 스토리보드 | `docs/storyboard.md` (최신 흑백 화면과 설명) |
+
+![학습 공간](docs/screenshots-bw/03-learning-start.jpg)
+
+최신 흑백 PDF(14쪽)와 통합 보고서(25쪽)는 작업 대화의 다운로드 파일로 제공합니다. GitHub의 `docs/reports/`에는 초기 PDF 자료를 보존하며, 최신 화면은 이 README와 `docs/storyboard.md`에서 볼 수 있습니다.
+
+## 가장 쉬운 실행
+
+1. 이 저장소를 다운로드하고 ZIP이면 압축을 풉니다.
+2. **Docker Desktop**을 실행합니다. Python 3.12 이상도 필요합니다.
+3. 폴더 안의 **`START_LOOP_AI.cmd`를 더블클릭**합니다.
+4. 처음에는 필요한 패키지와 DB를 준비하고, 준비되면 브라우저에서 LOOP AI가 열립니다.
+5. **‘시연 계정으로 로그인’** 버튼을 누릅니다. 이미 실행 중이면 시작 파일이 기존 화면만 엽니다.
+
+처음 실행할 때 패키지를 받는 동안 인터넷이 필요합니다. `.env`의 암호와 서명 키는 자동 생성하며 기존 값은 보존합니다. 시작 파일은 개발용 Python 서버를 백그라운드로 실행합니다. 실행 기록은 Git에서 제외한 `work/server.log`, `work/server-error.log`에 남깁니다. 수동 실행은 아래 절차를 참고하세요.
 
 ## 빠른 실행 (Windows PowerShell)
 
@@ -11,8 +35,6 @@ FastAPI + PostgreSQL 17 + HTML/CSS/JavaScript로 구현한 데이터베이스실
 ```powershell
 git clone https://github.com/seeun-jang/LOOP-AI-DB.git
 cd LOOP-AI-DB
-# 이 구현이 아직 main에 병합되지 않았다면:
-git switch feat/runnable-final-project
 python -m venv .venv
 .venv/Scripts/python.exe -m pip install -r requirements.txt
 .venv/Scripts/python.exe scripts/setup_env.py
@@ -73,7 +95,7 @@ docker compose exec db sh -c 'psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -v ON_E
 6. 프롬프트 실험에서 공통 질문과 A/B 지시 입력 → 두 응답과 실험 이력 확인.
 7. 새 회원으로 로그인 → 다른 회원의 기록이 보이지 않음을 확인. 삭제는 별도 연습 세션으로 시연.
 
-캡처와 화면별 설명은 [스토리보드](docs/storyboard.md), [화면 이미지](docs/screenshots), [요구사항 대응표](docs/requirements.md)를 참고하세요. 캡처는 실제 실행한 데모 모드 화면입니다. 이미지에 표시된 임시 시연 세션·실험은 검증 후 정리되었습니다.
+캡처와 화면별 설명은 [스토리보드](docs/storyboard.md), [화면 이미지](docs/screenshots-bw), [요구사항 대응표](docs/requirements.md)를 참고하세요. 캡처는 실제 실행한 데모 모드 화면입니다. 이미지에 표시된 임시 시연 세션·실험은 검증 후 정리되었습니다.
 
 ## 설계 및 저장 구조
 

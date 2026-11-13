@@ -2,7 +2,7 @@
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
 const state = {token: sessionStorage.getItem('loop-token'), user: null, topics: [], sessions: [], session: null, register: false, epoch: 0};
-const names = {learn: '학습 공간', history: '학습 기록', experiments: '프롬프트 실험', stats: '학습 통계', account: '내 계정'};
+const names = {learn: '전공 채팅', history: '학습 기록', experiments: '프롬프트 실험실', stats: '학습 통계', account: '내 계정'};
 const statuses = {in_progress: '진행중', completed: '완료', stopped: '중단'};
 let toastTimer;
 function el(tag, className, text) { const node = document.createElement(tag); if (className) node.className = className; if (text !== undefined) node.textContent = text; return node; }
@@ -72,15 +72,17 @@ async function enterApp() {
     card.onclick = () => { $('#topic-select').value = topic.topic_id; highlightTopic(); $('#session-form').elements.title.focus(); };
     $('#topic-cards').append(card);
   });
+  const lab=el('button','topic-card');lab.type='button';lab.append(el('span','arrow','↗'),el('h3','','프롬프트 실험'),el('p','','같은 질문, 다른 지시. A/B 응답을 나란히 비교해 보세요.'));lab.onclick=()=>showPage('experiments').catch(error=>notify(error.message,true));$('#topic-cards').append(lab);
+  $('#topic-select').value = state.topics.find(topic=>topic.name==='인공지능')?.topic_id || state.topics[0]?.topic_id;
   highlightTopic(); $('#auth-screen').hidden = true; $('#app-screen').hidden = false; resetLearning(); await showPage('learn');
 }
-function highlightTopic() { $$('.topic-card').forEach(card => card.classList.toggle('selected', card.dataset.topic === $('#topic-select').value)); }
+function highlightTopic() { $$('.topic-card').forEach(card => card.classList.toggle('selected', card.dataset.topic === $('#topic-select').value)); window.LoopGuide.select($('#topic-select').value); }
 $('#topic-select').onchange = highlightTopic;
 async function showPage(page) {
   if (page !== 'learn') state.epoch++;
   $$('.page').forEach(section => section.hidden = section.id !== `page-${page}`);
   $$('.nav-item[data-page]').forEach(button => button.classList.toggle('active', button.dataset.page === page));
-  $('#breadcrumb').textContent = `나의 워크스페이스 / ${names[page]}`;
+  $('#breadcrumb').textContent = `LOOP AI / ${names[page]}`;
   if (page === 'learn' && !state.session) await refreshSessions();
   if (page === 'history') await refreshSessions();
   if (page === 'experiments') await refreshExperiments();
@@ -104,7 +106,7 @@ async function refreshSessions() {
   $('#history-list').replaceChildren(...state.sessions.map(session => sessionRow(session, true))); $('#history-count').textContent = `전체 ${state.sessions.length}개의 학습 기록`;
   if (!state.sessions.length) { $('#recent-sessions').append(empty('아직 학습 기록이 없어요. 첫 번째 학습 루프를 시작해 보세요.')); $('#history-list').append(empty('학습을 시작하면 대화와 풀이 기록이 이곳에 차곡차곡 쌓입니다.')); }
 }
-function resetLearning() { state.session = null; state.epoch++; $('#learning-setup').hidden = false; $('#learning-active').hidden = true; }
+function resetLearning() { state.session = null; state.epoch++; $('#learning-setup').hidden = false; $('#learning-active').hidden = true; window.LoopGuide.sync(false); }
 $('#back-to-topics').onclick = () => { resetLearning(); refreshSessions().catch(error => notify(error.message, true)); };
 bindForm('#session-form', async form => { const values = data(form); const session = await api('/sessions', {method:'POST', body:{...values, topic_id:Number(values.topic_id)}}); form.elements.title.value = ''; await selectSession(session.session_id); notify('새로운 학습을 시작했습니다.'); });
 async function selectSession(id) {
@@ -113,6 +115,7 @@ async function selectSession(id) {
   const attempts = await Promise.all(questions.map(question => all(`/questions/${question.question_id}/attempts`)));
   if (epoch !== state.epoch || !state.token) return;
   state.session = session; await showPage('learn'); $('#learning-setup').hidden = true; $('#learning-active').hidden = false;
+  window.LoopGuide.select(session.topic_id); window.LoopGuide.sync(true, questions.length > 0);
   $('#session-topic').textContent = session.topic_name; $('#session-title').textContent = session.title; $('#session-date').textContent = `${date(session.started_at)} 시작 · ${statuses[session.status]} · 세션 #${session.session_id}`;
   $('#chat-messages').replaceChildren(...messages.map(renderMessage)); if (!messages.length) $('#chat-messages').append(el('div', 'chat-welcome', '안녕하세요, 나의 학습 튜터입니다.\n궁금한 개념을 질문하며 첫 대화를 시작해 보세요.'));
   $('#question-list').replaceChildren(...questions.map((question, i) => renderQuestion(question, attempts[i])));
@@ -156,5 +159,8 @@ bindForm('#password-form', async form => { await api('/users/me/password', {meth
 $('#delete-account').onclick = () => $('#delete-account-dialog').showModal();
 $('#cancel-delete-account').onclick = () => { $('#delete-account-dialog').close(); $('#delete-account-form').reset(); };
 bindForm('#delete-account-form', async form => { await api('/users/me', {method:'DELETE', body:data(form)}); $('#delete-account-dialog').close(); form.reset(); logout(); notify('계정과 모든 학습 기록을 삭제했습니다.'); });
+$('#practice-slot').append($('.practice-panel'));
+window.LoopGuide.init();window.LoopGuide.sync(false);
+document.addEventListener('loop-guide-topic',event=>{if(!state.session){$('#topic-select').value=event.detail.topicId;highlightTopic();}});
 setAuthMode(false);
 if (state.token) { api('/users/me').then(async user => { state.user = user; await enterApp(); }).catch(error => { logout(); notify(error.message, true); }); }

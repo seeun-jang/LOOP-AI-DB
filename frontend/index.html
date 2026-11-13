@@ -7,18 +7,19 @@
   <title>LOOP AI · 나의 학습 루프</title>
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/style.css">
+  <script src="/guide.js" defer></script>
   <script src="/app.js" defer></script>
 </head>
 <body>
   <div id="toast" role="status" aria-live="polite" hidden></div>
   <section id="auth-screen" class="auth-screen">
     <div class="auth-story">
-      <a class="brand" href="/"><img src="/favicon.svg" alt=""><span>LOOP<span class="brand-ai">AI</span></span></a>
+      <a class="brand" href="/"><img src="/favicon.svg" alt=""><span>LOOP AI</span></a>
       <div class="auth-copy"><span class="eyebrow">YOUR LEARNING, CONNECTED</span><h1>질문에서 이해로.<br>이해에서 <em>성장으로.</em></h1><p>AI와 함께 배우고, 직접 풀고, 기록으로 돌아보세요.<br>당신만의 학습 루프가 시작됩니다.</p>
         <div class="loop-steps"><span>01 질문하기</span><b>→</b><span>02 풀어보기</span><b>→</b><span>03 돌아보기</span></div>
         <div class="sample-card"><span class="mini-label">TODAY'S LEARNING</span><h3>배운 내용을 나의 것으로 만드는 방법</h3><p>작은 질문 하나부터 시작해 보세요.<br>학습 과정은 하나의 기록으로 이어집니다.</p><div class="sample-footer"><span class="dot"></span>전공 학습을 위한 나만의 공간 <span>↗</span></div></div>
       </div>
-      <small>LOOP AI 1.0 · 데이터베이스실무 기말 프로젝트</small>
+      <small>LOOP AI · 질문에서 이해까지, 배움을 연결하다.</small>
     </div>
     <div class="auth-panel"><div class="auth-box"><span class="eyebrow">WELCOME TO LOOP</span><h2 id="auth-title">다시 만나 반가워요</h2><p id="auth-description" class="muted">로그인하고 나의 학습을 이어가세요.</p>
       <div class="segmented"><button id="login-tab" type="button" class="active">로그인</button><button id="register-tab" type="button">회원가입</button></div>
@@ -34,32 +35,43 @@
   </section>
 
   <div id="app-screen" class="app-shell" hidden>
-    <aside class="sidebar">
-      <a class="brand" href="/"><img src="/favicon.svg" alt=""><span>LOOP<span class="brand-ai">AI</span></span></a>
-      <p class="nav-label">WORKSPACE</p>
-      <nav aria-label="주 메뉴">
-        <button data-page="learn" class="nav-item active"><span>◈</span>학습 공간</button>
-        <button data-page="history" class="nav-item"><span>▤</span>학습 기록</button>
-        <button data-page="experiments" class="nav-item"><span>⇄</span>프롬프트 실험</button>
-        <button data-page="stats" class="nav-item"><span>▥</span>학습 통계</button>
-      </nav>
-      <div class="sidebar-tip"><span>작은 질문, 큰 변화</span><p>오늘 배운 내용을<br>한 번 더 떠올려 보세요.</p><span class="tip-loop">↻</span></div>
-      <div class="sidebar-bottom"><button data-page="account" class="nav-item"><span>◎</span>내 계정</button><div class="profile"><div class="avatar" id="avatar">L</div><div><strong id="profile-name"></strong><small>나의 학습 공간</small></div><button id="logout" class="logout" title="로그아웃" aria-label="로그아웃">↪</button></div></div>
-    </aside>
+    <header class="workspace-header">
+      <a class="brand" href="/"><img src="/favicon.svg" alt=""><span><strong>LOOP AI</strong><small>질문에서 이해까지, 배움을 연결하다.</small></span></a>
+      <div class="header-right"><nav aria-label="주 메뉴">
+        <button data-page="learn" class="nav-item active">전공 채팅</button>
+        <button data-page="experiments" class="nav-item">프롬프트 실험실</button>
+        <button data-page="history" class="nav-item">학습 기록</button>
+        <button data-page="stats" class="nav-item">학습 통계</button>
+        <button data-page="account" class="nav-item">내 계정</button>
+      </nav><div class="profile"><div class="avatar" id="avatar">L</div><strong id="profile-name"></strong><button id="logout" class="logout" title="로그아웃" aria-label="로그아웃">↪</button></div></div>
+    </header>
     <div class="main-shell">
       <header class="topbar"><span id="breadcrumb">나의 워크스페이스 / 학습 공간</span><span class="mode-badge" id="mode-badge">연결 확인 중</span></header>
       <main id="main-content">
-        <section id="page-learn" class="page">
-          <div class="page-heading"><div><span class="eyebrow">LEARNING STUDIO</span><h1>오늘은 무엇을 배워볼까요?</h1><p>궁금한 개념부터 연습문제까지, 하나의 흐름으로 연결해요.</p></div><span class="heading-mark">↻</span></div>
-          <div id="learning-setup"><div id="topic-cards" class="topic-grid"></div>
+        <section id="page-learn" class="page"><div class="learning-layout"><div class="learning-main">
+          <div class="page-heading learning-heading"><div><h1>전공 공부, 루프와 함께</h1><p>개념을 이해하고, 코드를 읽고, 연습 문제로 확인해요.</p></div><span class="tag pale">나만의 학습 공간</span></div>
+          <div id="learning-setup"><div class="welcome-copy"><span class="eyebrow">A LITTLE CURIOSITY. A NEW POSSIBILITY.</span><h2>오늘은 무엇을 배워볼까요?</h2><p>AI·파이썬·SQL을 함께 공부해요.<br>오른쪽 목록에서 개념을 고르거나 학습 주제로 시작해 보세요.</p></div><div id="topic-cards" class="topic-grid"></div>
             <form id="session-form" class="start-card"><div><span class="mini-label">START YOUR LOOP</span><h2>새로운 학습 시작하기</h2><p class="muted">주제를 선택하고 오늘의 학습에 이름을 붙여주세요.</p></div><label>학습 주제<select name="topic_id" id="topic-select" required></select></label><label>세션 제목<input name="title" required maxlength="200" placeholder="예: 기본키와 외래키 이해하기"></label><button class="primary" type="submit">학습 시작 →</button></form>
             <div class="section-title"><h2>최근 학습</h2><button class="text-button" data-page="history">전체 기록 보기 ↗</button></div><div id="recent-sessions"></div>
           </div>
           <div id="learning-active" hidden>
             <div class="session-toolbar"><div><span id="session-topic" class="tag"></span><h2 id="session-title"></h2><small id="session-date" class="muted"></small></div><div class="toolbar-actions"><button id="edit-session" class="secondary">제목·상태 수정</button><button id="back-to-topics" class="secondary">새 학습</button></div></div>
-            <div class="studio-grid"><section class="card chat-panel"><div class="panel-heading"><div><span class="live-dot"></span><strong>AI 학습 튜터</strong></div><small>대화는 자동 저장됩니다</small></div><div id="chat-messages" class="chat-messages" aria-live="polite"></div><form id="message-form" class="composer"><label class="sr-only" for="message-input">AI에게 질문하기</label><textarea id="message-input" name="content" required maxlength="8000" rows="2" placeholder="궁금한 내용을 자유롭게 질문해 보세요."></textarea><button type="submit" class="primary">보내기 ↑</button></form><p class="panel-footnote">AI 답변은 틀릴 수 있습니다. 중요한 내용은 교재와 함께 확인하세요.</p></section>
+            <div class="studio-grid"><section class="card chat-panel"><div class="panel-heading"><div><strong>LOOP AI · 전공 튜터</strong></div><small>대화는 자동 저장됩니다</small></div><div id="chat-messages" class="chat-messages" aria-live="polite"></div><form id="message-form" class="composer"><label class="sr-only" for="message-input">AI에게 질문하기</label><textarea id="message-input" name="content" required maxlength="8000" rows="2" placeholder="궁금한 개념이나 코드를 입력해 주세요…"></textarea><button type="submit" class="primary">보내기 ↑</button></form><p class="panel-footnote">AI 답변은 틀릴 수 있습니다. 중요한 내용은 교재와 함께 확인하세요.</p></section>
               <section class="card practice-panel"><div class="panel-heading"><strong>배운 내용 확인하기</strong><span class="tag pale">PRACTICE</span></div><div class="practice-intro"><p>직접 풀어보면 더 오래 기억해요.</p><button id="generate-question" class="secondary full">+ 연습문제 만들기</button></div><div id="question-list"></div></section></div>
           </div>
+          </div><aside class="learning-guide" aria-label="학습 가이드">
+            <div class="guide-heading"><span class="eyebrow">LEARNING GUIDE</span><h2>학습 목록</h2><p>개념과 예시를 함께 살펴보세요.</p></div>
+            <div class="guide-tabs"><button id="guide-tab" class="active" type="button">개념 가이드</button><button id="practice-tab" type="button">연습문제</button></div>
+            <div id="guide-content"><div class="guide-topics">
+              <button data-guide="ai" data-topic-id="3" class="guide-item">AI 기초<small>신경망 구조 ↗</small></button>
+              <button data-guide="ml" data-topic-id="3" class="guide-item">머신러닝<small>학습과 일반화 ↗</small></button>
+              <button data-guide="data" data-topic-id="3" class="guide-item">데이터 분석<small>학습·검증·테스트 ↗</small></button>
+              <button data-guide="evaluation" data-topic-id="3" class="guide-item">모델 평가<small>정밀도와 재현율 ↗</small></button>
+              <button data-guide="python" data-topic-id="2" class="guide-item">파이썬<small>리스트와 인덱스 ↗</small></button>
+              <button data-guide="sql" data-topic-id="1" class="guide-item">SQL 기초<small>기본키와 외래키 ↗</small></button>
+            </div><div class="guide-explainer"><span class="mini-label">CONCEPT NOTE</span><h3 id="guide-title"></h3><p id="guide-description"></p><div id="guide-visual" class="guide-visual"></div><div id="guide-steps" class="guide-steps"></div><p id="guide-caption" class="guide-caption" aria-live="polite"></p><ul id="guide-points"></ul></div></div>
+            <div id="practice-slot" hidden></div>
+          </aside></div>
         </section>
         <section id="page-history" class="page" hidden><div class="page-heading"><div><span class="eyebrow">MY LEARNING ARCHIVE</span><h1>배움은 기록으로 남아요</h1><p>이전 대화와 풀이를 다시 확인하고, 학습을 이어가세요.</p></div></div><div class="archive-header"><strong id="history-count"></strong><button data-page="learn" class="primary">+ 새로운 학습</button></div><div id="history-list"></div></section>
         <section id="page-experiments" class="page" hidden><div class="page-heading"><div><span class="eyebrow">PROMPT LAB</span><h1>같은 질문, 다른 접근</h1><p>프롬프트가 답변에 어떤 차이를 만드는지 A/B로 비교해 보세요.</p></div><span class="heading-mark">⇄</span></div>
@@ -69,7 +81,7 @@
         <section id="page-stats" class="page" hidden><div class="page-heading"><div><span class="eyebrow">LEARNING INSIGHTS</span><h1>조금씩, 꾸준히 성장하고 있어요</h1><p>학습 기록에서 나의 강점과 다음 목표를 찾아보세요.</p></div></div><div id="stat-summary" class="summary-grid"></div><div class="card stats-card"><div class="section-title"><h2>주제별 학습 현황</h2><span class="tag pale">실시간 집계</span></div><div class="table-wrap"><table><thead><tr><th>학습 주제</th><th>학습 횟수</th><th>제출 횟수</th><th>정답 수</th><th>정답률</th></tr></thead><tbody id="stats-body"></tbody></table></div><p class="muted stats-note">학습 횟수는 세션 수, 정답률은 정답 풀이 수 ÷ 전체 제출 수입니다. 반복 제출을 모두 포함하며, 제출이 없으면 ‘풀이 없음’으로 표시합니다.</p></div></section>
         <section id="page-account" class="page" hidden><div class="page-heading"><div><span class="eyebrow">ACCOUNT SETTINGS</span><h1>내 계정</h1><p>회원 정보를 확인하고 변경하세요.</p></div></div><div class="account-grid"><form id="profile-form" class="card account-card"><h2>회원 정보</h2><label>아이디<input id="account-id" disabled></label><label>이름<input name="name" required maxlength="50"></label><label>이메일<input name="email" type="email" required maxlength="254"></label><button class="primary" type="submit">정보 저장</button></form><div><form id="password-form" class="card account-card"><h2>비밀번호 변경</h2><label>현재 비밀번호<input type="password" name="current_password" autocomplete="current-password" required maxlength="128"></label><label>새 비밀번호<input type="password" name="new_password" autocomplete="new-password" required minlength="10" maxlength="128"></label><small class="muted">10~128자 · 변경 후 모든 기존 토큰이 만료됩니다.</small><button class="secondary" type="submit">비밀번호 변경</button></form><div class="danger-zone"><h3>회원 탈퇴</h3><p>탈퇴하면 모든 학습 기록과 실험 결과가 함께 삭제됩니다.</p><button id="delete-account" class="danger">회원 탈퇴</button></div></div></div></section>
       </main>
-      <footer class="app-footer"><span>LOOP AI · Learn. Practice. Reflect.</span><span>데이터베이스실무 · 2026</span></footer>
+      <footer class="app-footer"><span>LOOP AI · 질문에서 이해까지, 배움을 연결하다.</span><span>데이터베이스실무 · 2026</span></footer>
     </div>
   </div>
   <dialog id="session-dialog"><form id="session-edit-form"><h2>학습 세션 수정</h2><label>세션 제목<input name="title" required maxlength="200"></label><label>학습상태<select name="status"><option value="in_progress">진행중</option><option value="completed">완료</option><option value="stopped">중단</option></select></label><div class="dialog-actions"><button type="button" class="secondary" id="cancel-edit">취소</button><button type="submit" class="primary">저장</button></div></form></dialog>
